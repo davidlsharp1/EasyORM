@@ -4,6 +4,8 @@ Simple ORM for SQL Server
 The easiest thing is to get a free azure account and point it to a SQL Server database to test.
 Limitations: It does not currently support relating objects. My goal was simplicity and overhead from the recurring reflection and the additional queries for related objects was something I didnt want to add.
 
+This was a learning experience so PR's are welcome.
+
 ## First Steps:
 1. The ORM has a public property called ConnectionString that needs to be set before you can interact with the database. 
 ```
