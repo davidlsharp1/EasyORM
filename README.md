@@ -86,7 +86,24 @@ var results = await EasyORM.ORM.Query<Person>.RunQuerySetAsync(qs);
 You also have the option of passing the SQL into the query directly. This is great for more complicated queries.
 
 ### Task<List<T>> RunSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+This is not recommended if you are concatenating SQL
 
 ```
 var results = await EasyORM.ORM.Query<Person>.RunSQLAsync("select * from Person");
 ```
+
+### New in version 1.0.1
+
+### Task<List<T>> RunSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+
+This allows you send SQL to the ORM and it will parameterize it for you.
+
+```
+string lastName = "Seinfeld";
+
+var sql = $"select* from Person p where p.LastName = [lastName|{lastName}]";
+// this syntax in the brackets gives your variable a parameter name.
+
+var results = await EasyORM.ORM.Query<Person>.RunSQLAsync(sql);
+```
+
