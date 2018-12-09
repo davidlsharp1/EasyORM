@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Simple ORM for SQL Server</Description>
+    <Copyright>Copyright (c) 2018 David Sharp</Copyright>
+    <PackageLicenseUrl>https://github.com/davidlsharp1/EasyORM/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/davidlsharp1/EasyORM</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/davidlsharp1/EasyORM</RepositoryUrl>
+    <PackageTags>ORM SQL Server SQL</PackageTags>
+    <PackageReleaseNotes>This updates adds a RunParamSQL method that allows you to send the ORM basic SQL and it will break out the paramters and create a parameterized query to send to the database.  The SQL syntax is only slightly different.  See documentation for more details.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
