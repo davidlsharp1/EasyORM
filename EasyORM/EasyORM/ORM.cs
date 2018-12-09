@@ -370,6 +370,99 @@ namespace EasyORM
                 return returnLS;
             }
 
+            public static async Task<List<T>> RunParamSQlAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                return await Task.Run(() => RunParamSQL(sql, cancellationToken));
+            }
+
+
+            public static async Task<List<T>> RunParamSQL(string sql, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                DataTable dataTable = new DataTable();
+
+                using (var db = new SqlConnection(ConnectionString))
+                {
+
+                    bool isParam = false;
+                    // split up sql and get params from it
+                    var paramLS = new List<string>();
+                    var removeLS = new List<string>();
+                    string param = string.Empty;
+
+                    foreach (var letter in sql)
+                    {
+                        if (letter == 91) // [
+                        {
+                            isParam = true;
+                            param = string.Empty;
+                        }
+
+                        if (isParam && letter == 93) // ]
+                        {
+                            isParam = false;
+                            paramLS.Add(param);
+                        }
+
+                        if (isParam)
+                        {
+                            if (letter != 91)
+                            {
+                                param = param + letter.ToString();
+                            }
+                        }
+                    }
+
+                    foreach (var item in paramLS)
+                    {
+                        var itemLS = item.Split('|');
+                        sql = sql.Replace($"[{item}]", $"@{itemLS[0]}");
+                    }
+
+                    db.Open();
+                    using (SqlCommand command = new SqlCommand(sql, db))
+                    {
+
+
+                        foreach (var item in paramLS)
+                        {
+                            var pList = item.Split('|');
+                            var sqlParam = new SqlParameter();
+                            sqlParam.ParameterName = pList[0];
+                            sqlParam.Value = pList[1];
+                            command.Parameters.Add(sqlParam);
+                        }
+
+                        SqlDataReader reader;
+                        reader = await command.ExecuteReaderAsync(cancellationToken);
+                        if (reader.HasRows)
+                        {
+                            dataTable.Load(reader);
+                        }
+                    }
+                }
+
+                var props = typeof(T).GetProperties();
+                var returnLS = new List<T>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    var tempObject = Activator.CreateInstance<T>();
+
+                    foreach (DataColumn col in dataTable.Columns)
+                    {
+                        PropertyInfo prop = typeof(T).GetProperty(col.ColumnName);
+                        if (row[col] != System.DBNull.Value)
+                        {
+                            prop.SetValue(tempObject, row[col]);
+                        }
+                    }
+                    returnLS.Add(tempObject);
+                }
+                return returnLS;
+            }
+
+
+
             public static async Task<List<T>> RunSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
             {
                 return await Task.Run(() => RunSQL(sql, cancellationToken));
