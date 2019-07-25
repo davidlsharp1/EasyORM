@@ -104,6 +104,6 @@ string lastName = "Seinfeld";
 var sql = $"select* from Person p where p.LastName = [lastName|{lastName}]";
 // this syntax in the brackets gives your variable a parameter name.
 
-var results = await EasyORM.ORM.Query<Person>.RunSQLAsync(sql);
+var results = await EasyORM.ORM.Query<Person>.RunParamSQlAsync(sql);
 ```
 
