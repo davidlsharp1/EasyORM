@@ -94,7 +94,7 @@ var results = await EasyORM.ORM.Query<Person>.RunSQLAsync("select * from Person"
 
 ### New in version 1.0.1
 
-### Task<List<T>> RunParamSQlAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+### Task<List<T>> RunParamSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
 
 This allows you send SQL to the ORM and it will parameterize it for you.
 
@@ -104,6 +104,6 @@ string lastName = "Seinfeld";
 var sql = $"select* from Person p where p.LastName = [lastName|{lastName}]";
 // this syntax in the brackets gives your variable a parameter name.
 
-var results = await EasyORM.ORM.Query<Person>.RunParamSQlAsync(sql);
+var results = await EasyORM.ORM.Query<Person>.RunParamSQLAsync(sql);
 ```
 
