@@ -247,7 +247,14 @@ namespace EasyORM
                             var p = new SqlParameter();
                             p.ParameterName = item;
                             var i = parameterLS.FindIndex(a => a == item);
-                            p.Value = valueLS[i];
+                            if (valueLS[i] is null)
+                            {
+                                p.Value = DBNull.Value;
+                            }
+                            else
+                            {
+                                p.Value = valueLS[i];
+                            }
                             cmd.Parameters.Add(p);
                         }
                         await cmd.ExecuteNonQueryAsync(cancellationToken);
