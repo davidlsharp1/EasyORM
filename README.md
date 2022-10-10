@@ -4,6 +4,8 @@ Simple ORM for SQL Server
 The easiest thing is to get a free azure account and point it to a SQL Server database to test.
 Limitations: It does not currently support relating objects. My goal was simplicity and overhead from the recurring reflection and the additional queries for related objects was something I didnt want to add.
 
+This was a learning experience so PR's are welcome.
+
 ## First Steps:
 1. The ORM has a public property called ConnectionString that needs to be set before you can interact with the database. 
 ```
@@ -81,10 +83,27 @@ qs.AddParameter("LastName", "like", "Seinfield");
 var results = await EasyORM.ORM.Query<Person>.RunQuerySetAsync(qs);
 ```
 
-You also have the option of passing the SQL into the query directly. This is great for more complicated queries.
+You also have the option of passing the SQL into the query directly. I like this for more complicated queries since I actually like writing SQL.  I usually create a model to represent the results and it works well for that. 
 
 ### Task<List<T>> RunSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+DO NOT CONCATENATE SQL! If you have parameters use the RunParamSQLAsync method below.
 
 ```
 var results = await EasyORM.ORM.Query<Person>.RunSQLAsync("select * from Person");
 ```
+
+### New in version 1.0.1
+
+### Task<List<T>> RunParamSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
+
+This allows you send SQL to the ORM and it will parameterize it for you.
+
+```
+string lastName = "Seinfeld";
+
+var sql = $"select* from Person p where p.LastName = [lastName|{lastName}]";
+// this syntax in the brackets gives your variable a parameter name named lastName with the value of the variable.
+
+var results = await EasyORM.ORM.Query<Person>.RunParamSQLAsync(sql);
+```
+
