@@ -6,6 +6,10 @@ Limitations: It does not currently support relating objects. My goal was simplic
 
 This was a learning experience so PR's are welcome.
 
+### New in version 1.0.2
+
+I removed confusing QuerySets and QueryParameter objects. I like writting SQL, so to me it is simpler to create a model to respresent my SQL results and use the ORM to convert those SQL results into C# objects.
+
 ## First Steps:
 1. The ORM has a public property called ConnectionString that needs to be set before you can interact with the database. 
 ```
@@ -73,17 +77,7 @@ var p = await EasyORM.ORM.Query<Person>.GetObjectByIDAsync(1);
 ```
 ### Querying Data
 
-Currently you can query the database by creating a queryset object and adding parameter objects to it. This allows multiple criteria. Once you have added all the criteria, you pass it into the query method This returns data in a list of T. Both options have an optional cancellation token parameter.
-
-### Task<List<T>> RunQuerySetAsync(QuerySet qs, CancellationToken cancellationToken = default(CancellationToken))
-```
-var qs = new EasyORM.QuerySet();
-qs.AddParameter("LastName", "like", "Seinfield");
-
-var results = await EasyORM.ORM.Query<Person>.RunQuerySetAsync(qs);
-```
-
-You also have the option of passing the SQL into the query directly. I like this for more complicated queries since I actually like writing SQL.  I usually create a model to represent the results and it works well for that. 
+You have the option of passing the SQL into the query directly. I like this for more complicated queries since I actually like writing SQL.  I usually create a model to represent the results and it works well for that. 
 
 ### Task<List<T>> RunSQLAsync(string sql, CancellationToken cancellationToken = default(CancellationToken))
 DO NOT CONCATENATE SQL! If you have parameters use the RunParamSQLAsync method below.
