@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EasyORM
 {
-    public class QuerySet
+    internal class QuerySet
     {
         public List<QueryParams> ParamLS { get; set; } = new List<QueryParams>();
 

@@ -128,13 +128,11 @@ namespace EasyORM
                         return "bool";
 
                     case "decimal":
+                    case "money":
                         return "decimal";
 
                     case "int":
                         return "int";
-
-                    case "date":
-                        return "datetime";
 
                     case "float":
                         return "double";
@@ -143,8 +141,19 @@ namespace EasyORM
                     case "nvarchar2":
                         return "string";
 
+                    case "datetime":
+                    case "date":  // having trouble with Date only. TODO fix later
+                        return "DateTime";
+
+
+                    case "binary":
+                        return "string";
+
+                    case "varbinary":
+                        return "Byte[]"; // not sure about this one
+
                     default:
-                        return "not found";
+                        return $"{dataType} not found";
                 }
             }
 
@@ -307,12 +316,12 @@ namespace EasyORM
         public static class Query<T>
         {
 
-            public static async Task<List<T>> RunQuerySetAsync(QuerySet qs, CancellationToken cancellationToken = default(CancellationToken))
+            internal static async Task<List<T>> RunQuerySetAsync(QuerySet qs, CancellationToken cancellationToken = default(CancellationToken))
             {
                 return await Task.Run(() => RunQuerySet(qs, cancellationToken));
             }
 
-            public static async Task<List<T>> RunQuerySet(QuerySet qs, CancellationToken cancellationToken = default(CancellationToken))
+            internal static async Task<List<T>> RunQuerySet(QuerySet qs, CancellationToken cancellationToken = default(CancellationToken))
             {
                 DataTable dataTable = new DataTable();
                 var whereLS = new List<string>();
